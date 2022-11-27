@@ -117,13 +117,13 @@ def AugmentationLayers(X_input):
     X = RandomRotation(factor=(-0.03, 0.03))(X)
     # X = RandomContrast(0.2)(X)
     # X = RandomBrightness((-0.2, 0.2))(X)
-    # X = RandomTranslation((-0.1, 0.1), (-0.1, 0.1))(X)
+    X = RandomTranslation((-0.1, 0.1), (-0.1, 0.1))(X)
     return X
 
 # Fully connected head concating month input and ResNet50 input
 def HeadModel(resnet_base, month_base):
     headModel = Flatten()(resnet_base.output)
-    # headModel = Concatenate()([headModel, month_base.output])
+    headModel = Concatenate()([headModel, month_base.output])
     # headModel = Dense(256, activation='relu', name='fc1',kernel_initializer=glorot_uniform(seed=0))(headModel)
     headModel = Dense(128, activation='relu', name='fc2',kernel_initializer=glorot_uniform(seed=0))(headModel)
     headModel = Dense(4, activation='softmax', name='softmax_out')(headModel)

@@ -4,7 +4,7 @@ import tensorflow as tf
 import sys
 
 def train(data_path):
-    batch_size = 32
+    batch_size = 8
 
     model, base_resnet, base_month, head = RoeDeerGenderClassificationModel()
    
@@ -28,11 +28,11 @@ def train(data_path):
     validation_generator = RoeDeerDataGen(data_path, "valid", batch_size, 4)
 
     # Compile model
-    opt = tf.keras.optimizers.Adam(learning_rate=0.001)
+    opt = tf.keras.optimizers.Adam(learning_rate=0.0005)
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
     # Fit model
-    model.fit(x=train_generator, validation_data=validation_generator, batch_size=batch_size, epochs=200, verbose=1, callbacks=[early_stopping_callback, model_checkpoint_callback])
+    model.fit(x=train_generator, validation_data=validation_generator, batch_size=batch_size, epochs=18, verbose=1, callbacks=[early_stopping_callback, model_checkpoint_callback])
 
 data_path = sys.argv[1]
 train(data_path)
