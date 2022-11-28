@@ -1,0 +1,4 @@
+*.pyc
+checkpoint*
+*.h5
+__py_cache__
