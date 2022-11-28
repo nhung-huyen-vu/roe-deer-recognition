@@ -121,9 +121,9 @@ def AugmentationLayers(X_input):
     return X
 
 # Fully connected head concating month input and ResNet50 input
-def HeadModel(resnet_base, month_base):
-    headModel = Flatten()(resnet_base.output)
-    headModel = Concatenate()([headModel, month_base.output])
+def HeadModel(resnet_base_output, month_base_output):
+    headModel = Flatten()(resnet_base_output)
+    headModel = Concatenate()([headModel, month_base_output])
     # headModel = Dense(256, activation='relu', name='fc1',kernel_initializer=glorot_uniform(seed=0))(headModel)
     headModel = Dense(128, activation='relu', name='fc2',kernel_initializer=glorot_uniform(seed=0))(headModel)
     headModel = Dense(4, activation='softmax', name='softmax_out')(headModel)
@@ -132,11 +132,12 @@ def HeadModel(resnet_base, month_base):
 def RoeDeerGenderClassificationModel():
     X_input = Input((224,224,3))
     X = AugmentationLayers(X_input)
-    base_resnet = tf.keras.applications.ResNet50V2(include_top=False, weights="imagenet", pooling="avg", input_tensor=X)
+    base_resnet = tf.keras.applications.ResNet50V2(include_top=False, weights="imagenet", pooling="avg")
+    X = base_resnet(X, training=False)
 
     base_month = MonthBaseNetwork()
 
-    head = HeadModel(base_resnet, base_month)
+    head = HeadModel(X, base_month.output)
 
     model = Model(inputs=[X_input, base_month.input], outputs=head)
 
