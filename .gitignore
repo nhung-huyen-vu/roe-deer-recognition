@@ -20,32 +20,32 @@
 *.data
 *.json
 *.cfg
-!yolov7/setup.cfg
-!yolov7/cfg/yolov3*.cfg
+!setup.cfg
+!cfg/yolov3*.cfg
 
 storage.googleapis.com
-yolov7/runs/*
-yolov7/data/*
-yolov7/data/images/*
-!yolov7/data/*.yaml
-!yolov7/data/hyps
-!yolov7/data/scripts
-!yolov7/data/images
-!yolov7/data/images/zidane.jpg
-!yolov7/data/images/bus.jpg
-!yolov7/data/*.sh
+runs/*
+data/*
+data/images/*
+!data/*.yaml
+!data/hyps
+!data/scripts
+!data/images
+!data/images/zidane.jpg
+!data/images/bus.jpg
+!data/*.sh
 
-yolov7/results*.csv
+results*.csv
 
 # Datasets -------------------------------------------------------------------------------------------------------------
-yolov7/coco/
-yolov7/coco128/
-yolov7/VOC/
-yolov7/
-yolov7/coco2017labels-segments.zip
-yolov7/test2017.zip
-yolov7/train2017.zip
-yolov7/val2017.zip
+coco/
+coco128/
+VOC/
+
+coco2017labels-segments.zip
+test2017.zip
+train2017.zip
+val2017.zip
 
 # MATLAB GitIgnore -----------------------------------------------------------------------------------------------------
 *.m~
@@ -65,14 +65,14 @@ yolov7/val2017.zip
 *_saved_model/
 *_web_model/
 *_openvino_model/
-yolov7/darknet53.conv.74
-yolov7/yolov3-tiny.conv.15
+darknet53.conv.74
+yolov3-tiny.conv.15
 *.ptl
 *.trt
 
 # GitHub Python GitIgnore ----------------------------------------------------------------------------------------------
 # Byte-compiled / optimized / DLL files
-yolov7/__pycache__/
+__pycache__/
 *.py[cod]
 *$py.class
 
@@ -80,20 +80,20 @@ yolov7/__pycache__/
 *.so
 
 # Distribution / packaging
-yolov7/.Python
-yolov7/env/
-yolov7/build/
-yolov7/develop-eggs/
-yolov7/dist/
-yolov7/downloads/
-yolov7/eggs/
-yolov7/.eggs/
-yolov7/lib/
-yolov7/lib64/
-yolov7/parts/
-yolov7/sdist/
-yolov7/var/
-yolov7/wheels/
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
 *.egg-info/
 /wandb/
 .installed.cfg
@@ -107,17 +107,17 @@ yolov7/wheels/
 *.spec
 
 # Installer logs
-yolov7/pip-log.txt
-yolov7/pip-delete-this-directory.txt
+pip-log.txt
+pip-delete-this-directory.txt
 
 # Unit test / coverage reports
-yolov7/htmlcov/
-yolov7/.tox/
-yolov7/.coverage
-yolov7/.coverage.*
-yolov7/.cache
-yolov7/nosetests.xml
-yolov7/coverage.xml
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
 *.cover
 .hypothesis/
 
@@ -127,77 +127,77 @@ yolov7/coverage.xml
 
 # Django stuff:
 *.log
-yolov7/local_settings.py
+local_settings.py
 
 # Flask stuff:
-yolov7/instance/
-yolov7/.webassets-cache
+instance/
+.webassets-cache
 
 # Scrapy stuff:
-yolov7/.scrapy
+.scrapy
 
 # Sphinx documentation
-yolov7/docs/_build/
+docs/_build/
 
 # PyBuilder
-yolov7/target/
+target/
 
 # Jupyter Notebook
-yolov7/.ipynb_checkpoints
+.ipynb_checkpoints
 
 # pyenv
-yolov7/.python-version
+.python-version
 
 # celery beat schedule file
-yolov7/celerybeat-schedule
+celerybeat-schedule
 
 # SageMath parsed files
-yolov7/*.sage.py
+*.sage.py
 
 # dotenv
-yolov7/.env
+.env
 
 # virtualenv
-yolov7/.venv*
-yolov7/venv*/
-yolov7/ENV*/
+.venv*
+venv*/
+ENV*/
 
 # Spyder project settings
-yolov7/.spyderproject
-yolov7/.spyproject
+.spyderproject
+.spyproject
 
 # Rope project settings
-yolov7/.ropeproject
+.ropeproject
 
 # mkdocs documentation
 /site
 
 # mypy
-yolov7/.mypy_cache/
+.mypy_cache/
 
 
 # https://github.com/github/gitignore/blob/master/Global/macOS.gitignore -----------------------------------------------
 
 # General
-yolov7/.DS_Store
-yolov7/.AppleDouble
-yolov7/.LSOverride
+.DS_Store
+.AppleDouble
+.LSOverride
 
 # Icon must end with two \r
-yolov7/Icon
-yolov7/Icon?
+Icon
+Icon?
 
 # Thumbnails
 ._*
 
 # Files that might appear in the root of a volume
-yolov7/.DocumentRevisions-V100
-yolov7/.fseventsd
-yolov7/.Spotlight-V100
-yolov7/.TemporaryItems
-yolov7/.Trashes
-yolov7/.VolumeIcon.icns
-yolov7/.com.apple.timemachine.donotpresent
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
 
 # Directories potentially created on remote AFP share
 .AppleDB
