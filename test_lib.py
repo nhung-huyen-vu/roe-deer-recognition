@@ -8,16 +8,16 @@ import torch
 import yaml
 from tqdm import tqdm
 
-from models.experimental import attempt_load
-from utils.datasets import create_dataloader
-from utils.general import coco80_to_coco91_class, check_dataset, check_file, check_img_size, check_requirements, \
+from .models.experimental import attempt_load
+from .utils.datasets import create_dataloader
+from .utils.general import coco80_to_coco91_class, check_dataset, check_file, check_img_size, check_requirements, \
     box_iou, non_max_suppression, scale_coords, xyxy2xywh, xywh2xyxy, set_logging, increment_path, colorstr
-from utils.metrics import ap_per_class, ConfusionMatrix
-from utils.plots import plot_images, output_to_target, plot_study_txt
-from utils.torch_utils import select_device, time_synchronized, TracedModel
+from .utils.metrics import ap_per_class, ConfusionMatrix
+from .utils.plots import plot_images, output_to_target, plot_study_txt
+from .utils.torch_utils import select_device, time_synchronized, TracedModel
 
-
-def test(data,
+def test(opt,
+         data,
          weights=None,
          batch_size=32,
          imgsz=640,
@@ -39,7 +39,8 @@ def test(data,
          half_precision=True,
          trace=False,
          is_coco=False,
-         v5_metric=False):
+         v5_metric=False,
+         second_stage_classifier=None):
     # Initialize/load model and set device
     training = model is not None
     if training:  # called by train.py
@@ -123,6 +124,10 @@ def test(data,
             t = time_synchronized()
             out = non_max_suppression(out, conf_thres=conf_thres, iou_thres=iou_thres, labels=lb, multi_label=True)
             t1 += time_synchronized() - t
+
+        # Apply second stage classifier if provided to overwrite class predicitions
+        if second_stage_classifier:
+            out = second_stage_classifier(img, out)
 
         # Statistics per image
         for si, pred in enumerate(out):
