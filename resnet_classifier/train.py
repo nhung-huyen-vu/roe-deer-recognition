@@ -31,8 +31,8 @@ def train(data_path):
 
     # Create callback for checkpoint creation
     model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
-        filepath="best.h5",
-        save_weights_only=True,
+        filepath="best.model",
+        save_weights_only=False,
         monitor='val_accuracy',
         mode='max',
         save_best_only=True)
@@ -45,6 +45,8 @@ def train(data_path):
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
     history_fine = model.fit(x=train_generator, validation_data=validation_generator, batch_size=batch_size, initial_epoch=history.epoch[-1], epochs=initial_epochs + tuning_epochs, verbose=1, callbacks=[early_stopping_callback, model_checkpoint_callback])
+
+    model.save("final.model")
 
 
 data_path = sys.argv[1]

@@ -1,0 +1,9 @@
+train: /data/images/train
+val: /data/images/valid  # 5000 images
+test: /data/images/test  # 5000 images
+
+# number of classes
+nc: 4
+
+# class names
+names: [ 'FemaleRoeDeer', 'MaleRoeDeer', 'UnknownGenderRoeDeer', 'JuvenileRoeDeer']

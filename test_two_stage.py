@@ -4,21 +4,78 @@ import argparse
 import numpy as np
 from pathlib import Path
 
-from yolov7.test_lib import test
-from yolov7.utils.general import check_file
+import torch
+from test_lib import test
+from utils.general import check_file
+from PIL import Image
+from resnet_classifier.infer import RoedeerInference
+import torchvision.transforms as T
 
-def second_stage_classifier(img, predictions):
-    print(img, img.shape)
-    print(predicitions)
-    return predicitions
+inference = RoedeerInference("resnet_classifier/best.model")
+conf_tresh_for_two_stage = 0.5
+
+def second_stage_classifier(img_batch, predictions, conf_thres, paths):
+
+    index = 0
+    for img, prediction, path in zip(img_batch, predictions, paths):
+        n_predictions, _ = prediction.shape
+
+        month_path = path.replace("images", "months").replace("JPG", "month")
+        with open(month_path, 'r') as f:
+            month = int(f.read())
+
+
+        _, h_img, w_img = img.shape
+        for i in range(0, n_predictions):
+            if prediction[i, 4] < conf_tresh_for_two_stage:
+                break
+
+            # get bounding box corners
+            x0, y0, x1, y1, _, _ = prediction[i, :]
+            x0, y0, x1, y1 = [int(e.item()) for e in [x0, y0, x1, y1]]
+
+            # get bounding box width and height
+            w_bb = x1 - x0
+            h_bb = y1 - y0
+
+            # get center coordinate
+            xc = x0 + w_bb // 2
+            yc = y0 + h_bb // 2
+
+            # compute coordinates with 10% margin
+            r = max((w_bb // 2) * 1.1, (h_bb // 2) * 1.1)
+            x0 = xc - r
+            x1 = xc + r
+            y0 = yc - r
+            y1 = yc + r
+            x0 = int(max(x0, 0))
+            y0 = int(max(y0, 0))
+            x1 = int(min(x1, w_img))
+            y1 = int(min(y1, h_img))
+           
+            # Transform to image
+            cropped = img[:,y0:y1,x0:x1]
+            pil_img = T.ToPILImage()(cropped)
+
+            # run second stage inference
+            class_prediction, class_confidence = inference.infer(pil_img, month)
+
+            print("yolo: {}@{}, resnet: {}@{}".format(int(prediction[i, 5]), prediction[i, 4], int(class_prediction), class_confidence))
+
+            # write inference result
+            prediction[i, 4] = torch.from_numpy(np.array([class_confidence])).to(prediction)
+            prediction[i, 5] = torch.from_numpy(np.array([class_prediction])).to(prediction)
+
+    return predictions
     
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='test.py')
-    parser.add_argument('--data', default="yolov7/data/roedeer.yaml", help='*.data path')
-    parser.add_argument('--batch-size', type=int, default=32, help='size of each image batch')
+    parser.add_argument('--data', default="data/roedeer.yaml", help='*.data path')
+    parser.add_argument('--batch-size', type=int, default=1, help='size of each image batch')
     parser.add_argument('--img-size', type=int, default=714, help='inference size (pixels)')
     parser.add_argument('--conf-thres', type=float, default=0.001, help='object confidence threshold')
+    parser.add_argument('--conf-thres-second-stage', type=float, default=0.5, help='object confidence threshold for applying second stage')
     parser.add_argument('--iou-thres', type=float, default=0.65, help='IOU threshold for NMS')
     parser.add_argument('--task', default='val', help='train, val, test, speed or study')
     parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
@@ -42,7 +99,7 @@ if __name__ == '__main__':
 
 test(opt, 
      opt.data,
-     "yolov7/weights/roedeer_t4.pt", #weights
+     "weights/roedeer_t4.pt", #weights
      opt.batch_size,
      opt.img_size,
      opt.conf_thres,

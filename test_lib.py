@@ -8,13 +8,13 @@ import torch
 import yaml
 from tqdm import tqdm
 
-from .models.experimental import attempt_load
-from .utils.datasets import create_dataloader
-from .utils.general import coco80_to_coco91_class, check_dataset, check_file, check_img_size, check_requirements, \
+from models.experimental import attempt_load
+from utils.datasets import create_dataloader
+from utils.general import coco80_to_coco91_class, check_dataset, check_file, check_img_size, check_requirements, \
     box_iou, non_max_suppression, scale_coords, xyxy2xywh, xywh2xyxy, set_logging, increment_path, colorstr
-from .utils.metrics import ap_per_class, ConfusionMatrix
-from .utils.plots import plot_images, output_to_target, plot_study_txt
-from .utils.torch_utils import select_device, time_synchronized, TracedModel
+from utils.metrics import ap_per_class, ConfusionMatrix
+from utils.plots import plot_images, output_to_target, plot_study_txt
+from utils.torch_utils import select_device, time_synchronized, TracedModel
 
 def test(opt,
          data,
@@ -127,7 +127,7 @@ def test(opt,
 
         # Apply second stage classifier if provided to overwrite class predicitions
         if second_stage_classifier:
-            out = second_stage_classifier(img, out)
+            out = second_stage_classifier(img, out, conf_thres, paths)
 
         # Statistics per image
         for si, pred in enumerate(out):

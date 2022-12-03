@@ -1,4 +1,5 @@
 *.pyc
 checkpoint*
 *.h5
+*.model
 __py_cache__
