@@ -60,8 +60,6 @@ def second_stage_classifier(img_batch, predictions, conf_thres, paths):
             # run second stage inference
             class_prediction, class_confidence = inference.infer(pil_img, month)
 
-            print("yolo: {}@{}, resnet: {}@{}".format(int(prediction[i, 5]), prediction[i, 4], int(class_prediction), class_confidence))
-
             # write inference result
             prediction[i, 4] = torch.from_numpy(np.array([class_confidence])).to(prediction)
             prediction[i, 5] = torch.from_numpy(np.array([class_prediction])).to(prediction)
