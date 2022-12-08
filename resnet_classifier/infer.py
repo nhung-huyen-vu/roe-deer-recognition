@@ -29,9 +29,18 @@ class RoedeerInference:
 
         month_tensor = np.array([month])
 
-        one_hot = self.model((x, month_tensor), training=False)
+        result = self.model((x, month_tensor), training=False)
 
-        return np.argmax(one_hot), np.max(one_hot)
+        print(result)
+
+        if result > 0.0:
+            label = 1 
+            confidence = result
+        else:
+            label = 0
+            confidence = 1.0 - result
+
+        return label, confidence
 
 
 

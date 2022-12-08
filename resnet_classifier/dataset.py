@@ -23,7 +23,7 @@ class RoeDeerDataGen(tf.keras.utils.Sequence):
         samples_per_class = {}
         for filename in self.image_filenames:
             filename = filename.split(".")[0]
-            label, _ = self.__load_label(filename)
+            label = self.__load_label(filename)
             
             if not label in samples_per_class:
                 samples_per_class[label] = []
@@ -47,14 +47,17 @@ class RoeDeerDataGen(tf.keras.utils.Sequence):
         image_path = os.path.join(image_directory, "{}.jpg".format(name))
         image = tf.keras.preprocessing.image.load_img(image_path)
         image_arr = tf.keras.preprocessing.image.img_to_array(image)
-        image_arr = image_arr/255.
+        image_arr = image_arr / 255.0
         return image_arr
 
     def __load_label(self, name):
         label_path = os.path.join(self.label_directory,"{}.txt".format(name))
         with open(label_path, "r") as label_file:
-            label = int(label_file.read())
-        return label, tf.keras.utils.to_categorical(label, num_classes = self.num_classes)
+            if int(label_file.read()) == 2:
+                label = 0
+            else:
+                label = 1
+        return label
 
     def __load_month(self, name):
         basename = name.split("_")[0]
@@ -81,7 +84,7 @@ class RoeDeerDataGen(tf.keras.utils.Sequence):
             filename = filename.split(".")[0]
             
             images.append(self.__load_image(filename))
-            labels.append(self.__load_label(filename)[1])
+            labels.append(self.__load_label(filename))
             months.append(self.__load_month(filename))
 
         image_out = np.stack(images)

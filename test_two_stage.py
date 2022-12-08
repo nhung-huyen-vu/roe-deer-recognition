@@ -58,11 +58,12 @@ def second_stage_classifier(img_batch, predictions, conf_thres, paths):
             pil_img = T.ToPILImage()(cropped)
 
             # run second stage inference
-            class_prediction, class_confidence = inference.infer(pil_img, month)
+            identifyable_prediction, confidence = inference.infer(pil_img, month)
 
             # write inference result
-            prediction[i, 4] = torch.from_numpy(np.array([class_confidence])).to(prediction)
-            prediction[i, 5] = torch.from_numpy(np.array([class_prediction])).to(prediction)
+            if identifyable_prediction == 0:
+                prediction[i, 4] = torch.from_numpy(np.array([confidence])).to(prediction)
+                prediction[i, 5] = torch.from_numpy(np.array([2.0])).to(prediction)
 
     return predictions
     
